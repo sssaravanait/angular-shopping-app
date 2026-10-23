@@ -1,0 +1,23 @@
+<div class="min-h-screen bg-slate-50 text-slate-900">
+  <app-header [menuExpanded]="isSidebarOpen()" (menuToggle)="toggleSidebar()" />
+
+  <div class="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-[1600px]">
+    @if (isSidebarOpen()) {
+      <button
+        aria-label="Close navigation menu"
+        class="fixed inset-x-0 bottom-0 top-16 z-30 bg-slate-950/40 md:hidden"
+        type="button"
+        (click)="closeSidebar()"
+      ></button>
+    }
+
+    <app-sidebar
+      [isOpen]="isSidebarOpen()"
+      (navigate)="closeSidebar()"
+    />
+
+    <main class="min-w-0 flex-1 px-5 py-8 sm:px-8" id="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

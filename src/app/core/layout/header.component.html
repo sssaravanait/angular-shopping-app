@@ -1,0 +1,47 @@
+<header class="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center gap-3">
+    <button
+      aria-label="Toggle navigation"
+      class="grid size-10 place-items-center rounded-md text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 md:hidden"
+      type="button"
+      [attr.aria-expanded]="menuExpanded()"
+      aria-controls="primary-navigation"
+      (click)="menuToggle.emit()"
+    >
+      @if (menuExpanded()) {
+        <svg aria-hidden="true" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path d="m6 6 12 12M18 6 6 18" stroke-linecap="round" />
+        </svg>
+      } @else {
+        <svg aria-hidden="true" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+        </svg>
+      }
+    </button>
+
+    <a
+      aria-label="Marketline dashboard"
+      class="flex items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700"
+      routerLink="/dashboard"
+    >
+      <span class="grid size-9 place-items-center rounded-lg bg-emerald-700 text-white">
+        <svg aria-hidden="true" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" stroke-linejoin="round" />
+          <path d="m4.5 7.8 7.5 4.3 7.5-4.3M12 12v8.5" stroke-linejoin="round" />
+        </svg>
+      </span>
+      <span class="text-[15px] font-semibold tracking-tight text-slate-950">Marketline</span>
+    </a>
+  </div>
+
+  <button
+    aria-label="Open profile menu"
+    class="grid size-10 place-items-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-slate-300 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
+    title="Profile"
+    type="button"
+  >
+    <svg aria-hidden="true" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
+      <path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</header>
