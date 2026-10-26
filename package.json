@@ -17,10 +17,13 @@
     "@angular/forms": "^22.2.0",
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
+    "@primeuix/themes": "^3.1.0",
     "@tailwindcss/postcss": "^4.3.3",
     "postcss": "^8.5.31",
+    "primeng": "^22.1.4",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.3.3",
+    "tailwindcss-primeui": "^0.6.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
