@@ -3,10 +3,9 @@ import { ActivatedRoute } from "@angular/router";
 import { ButtonDirective } from 'primeng/button';
 
 @Component({
-    imports: [],
+    imports: [ButtonDirective],
     selector: "app-customers",
-    // templateUrl: "customers",
-    template: `<button pButton>Check</button>`,
+    templateUrl: "./customers.html",
     styleUrl: "./customers.css"
 })
 
