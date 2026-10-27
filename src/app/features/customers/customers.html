@@ -12,17 +12,22 @@
     }
 
     <p-table
+        class="block overflow-hidden rounded-md border border-emerald-100 shadow-md"
+        tableStyleClass="border-emerald-200"
         [value]="customers()"
         [lazy]="true"
         [paginator]="true"
         [first]="first()"
         [rows]="pageSize()"
         [totalRecords]="totalRecords()"
-        [rowsPerPageOptions]="[10, 25, 50]"
+        [rowsPerPageOptions]="[10, 25, 50, 100]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} customers"
         [loading]="loading()"
         sortMode="single"
         dataKey="id"
-        (onLazyLoad)="onLazyLoad($event)"
+        (onPage)="onPageChange($event)"
+        (onSort)="onSortChange($event)"
         aria-label="Customer list"
     >
         <ng-template #header>
@@ -42,9 +47,9 @@
                 <td>{{ customer.last_name }}</td>
                 <td>{{ customer.email }}</td>
                 <td>{{ customer.phone }}</td>
-                <td>{{ customer.dob }}</td>
-                <td>{{ customer.created_at }}</td>
-                <td>{{ customer.updated_at }}</td>
+                <td>{{ customer.dob | date: 'mediumDate' }}</td>
+                <td>{{ customer.created_at | date: 'medium' }}</td>
+                <td>{{ customer.updated_at | date: 'medium' }}</td>
             </tr>
         </ng-template>
         <ng-template #emptymessage>

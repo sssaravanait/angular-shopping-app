@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { environment } from '../../../environments/environment';
 
 interface Customer {
@@ -17,18 +18,21 @@ interface Customer {
 }
 
 interface CustomerPage {
+    readonly page: number;
+    readonly per_page: number;
+    readonly total_pages: number;
+    readonly total_items: number;
     readonly data: Customer[];
-    readonly total: number;
 }
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule, TableModule],
+    imports: [ButtonModule, DatePipe, TableModule],
     selector: 'app-customers',
     templateUrl: './customers.html',
     styleUrl: './customers.css',
 })
-export class CustomerComponent {
+export class CustomerComponent implements OnInit {
     private readonly http = inject(HttpClient);
 
     protected readonly customers = signal<Customer[]>([]);
@@ -41,13 +45,23 @@ export class CustomerComponent {
     private readonly sortField = signal<string | undefined>(undefined);
     private readonly sortOrder = signal<'asc' | 'desc' | undefined>(undefined);
 
-    protected onLazyLoad(event: TableLazyLoadEvent): void {
+    ngOnInit(): void {
+        this.loadCustomers();
+    }
+
+    protected onPageChange(event: TablePageEvent): void {
         const first = event.first ?? 0;
         const rows = event.rows ?? this.pageSize();
-        const field = typeof event.sortField === 'string' ? event.sortField : undefined;
 
         this.first.set(first);
         this.pageSize.set(rows);
+        this.loadCustomers();
+    }
+
+    protected onSortChange(event: TableLazyLoadEvent): void {
+        const field = typeof event.sortField === 'string' ? event.sortField : undefined;
+
+        this.first.set(0);
         this.sortField.set(field);
         this.sortOrder.set(field && event.sortOrder ? (event.sortOrder === 1 ? 'asc' : 'desc') : undefined);
         this.loadCustomers();
@@ -71,12 +85,12 @@ export class CustomerComponent {
         this.loading.set(true);
         this.error.set(null);
 
-        this.http.get<CustomerPage>(`${environment.apiUrl}/customers`, { params })
+        this.http.get<CustomerPage>(`${environment.apiUrl}/customers/`, { params })
         .pipe(finalize(() => this.loading.set(false)))
         .subscribe({
             next: (response) => {
                 this.customers.set(response.data);
-                this.totalRecords.set(response.total);
+                this.totalRecords.set(response.total_items);
             },
             error: () => this.error.set('Unable to load customers. Please try again.'),
         });
