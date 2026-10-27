@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
+import { Pencil } from '@primeicons/angular/pencil';
+import { Trash } from '@primeicons/angular/trash';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { environment } from '../../../environments/environment';
 
@@ -27,7 +29,7 @@ interface CustomerPage {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule, DatePipe, TableModule],
+    imports: [ButtonModule, DatePipe, TableModule, Pencil, Trash],
     selector: 'app-customers',
     templateUrl: './customers.html',
     styleUrl: './customers.css',

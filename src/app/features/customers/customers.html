@@ -1,13 +1,13 @@
 <section class="space-y-4" aria-labelledby="customers-title">
     <header class="flex flex-wrap items-center justify-between gap-3">
         <h1 id="customers-title" class="text-2xl font-semibold">Customers</h1>
-        <button pButton severity="primary">Create Customer</button>
+        <button pButton raised severity="primary">Create Customer</button>
     </header>
 
     @if (error(); as message) {
         <div class="flex flex-wrap items-center justify-between gap-3 rounded border border-red-300 bg-red-50 p-3 text-red-800" role="alert">
             <p>{{ message }}</p>
-            <button pButton severity="contrast" (onClick)="reload()">Retry</button>
+            <button pButton raised severity="contrast" (onClick)="reload()">Retry</button>
         </div>
     }
 
@@ -39,6 +39,7 @@
                 <th>DOB</th>
                 <th pSortableColumn="created_at">Created At <p-sort-icon field="created_at" /></th>
                 <th pSortableColumn="updated_at">Updated At <p-sort-icon field="updated_at" /></th>
+                <th>Actions</th>
             </tr>
         </ng-template>
         <ng-template #body let-customer>
@@ -50,6 +51,12 @@
                 <td>{{ customer.dob | date: 'mediumDate' }}</td>
                 <td>{{ customer.created_at | date: 'medium' }}</td>
                 <td>{{ customer.updated_at | date: 'medium' }}</td>
+                <td>
+                    <div class="flex flex-1 justify-around gap-1">
+                        <button pButton raised severity="info" size="small"><svg data-p-icon="pencil"></svg></button>
+                        <button pButton raised severity="danger" size="small"><svg data-p-icon="trash"></svg></button>
+                    </div>
+                </td>
             </tr>
         </ng-template>
         <ng-template #emptymessage>
