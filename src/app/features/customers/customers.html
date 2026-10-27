@@ -1,10 +1,56 @@
-<div class="flex flex-wrap gap-4">
-    <button pButton>Primary</button>
-    <button pButton severity="secondary">Secondary</button>
-    <button pButton severity="success">Success</button>
-    <button pButton severity="info">Info</button>
-    <button pButton severity="warn">Warn</button>
-    <button pButton severity="help">Help</button>
-    <button pButton severity="danger">Danger</button>
-    <button pButton severity="contrast">Contrast</button>
-</div>
+<section class="space-y-4" aria-labelledby="customers-title">
+    <header class="flex flex-wrap items-center justify-between gap-3">
+        <h1 id="customers-title" class="text-2xl font-semibold">Customers</h1>
+        <button pButton severity="primary">Create Customer</button>
+    </header>
+
+    @if (error(); as message) {
+        <div class="flex flex-wrap items-center justify-between gap-3 rounded border border-red-300 bg-red-50 p-3 text-red-800" role="alert">
+            <p>{{ message }}</p>
+            <button pButton severity="contrast" (onClick)="reload()">Retry</button>
+        </div>
+    }
+
+    <p-table
+        [value]="customers()"
+        [lazy]="true"
+        [paginator]="true"
+        [first]="first()"
+        [rows]="pageSize()"
+        [totalRecords]="totalRecords()"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [loading]="loading()"
+        sortMode="single"
+        dataKey="id"
+        (onLazyLoad)="onLazyLoad($event)"
+        aria-label="Customer list"
+    >
+        <ng-template #header>
+            <tr>
+                <th pSortableColumn="first_name">First Name <p-sort-icon field="first_name" /></th>
+                <th pSortableColumn="last_name">Last Name <p-sort-icon field="last_name" /></th>
+                <th pSortableColumn="email">Email <p-sort-icon field="email" /></th>
+                <th pSortableColumn="phone">Phone <p-sort-icon field="phone" /></th>
+                <th>DOB</th>
+                <th pSortableColumn="created_at">Created At <p-sort-icon field="created_at" /></th>
+                <th pSortableColumn="updated_at">Updated At <p-sort-icon field="updated_at" /></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-customer>
+            <tr>
+                <td>{{ customer.first_name }}</td>
+                <td>{{ customer.last_name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.dob }}</td>
+                <td>{{ customer.created_at }}</td>
+                <td>{{ customer.updated_at }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="7" class="py-6 text-center">No customers found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</section>
