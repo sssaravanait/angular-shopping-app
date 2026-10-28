@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -12,7 +12,13 @@ import { httpErrorInterceptor } from './core/http/http-error.interceptor';
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(), 
-        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideHttpClient(
+            withInterceptors([httpErrorInterceptor]),
+            withXsrfConfiguration({
+                cookieName: 'csrftoken',
+                headerName: 'X-CSRFToken',
+            }),
+        ),
         provideRouter(routes, withComponentInputBinding()),
         MessageService,     // toast messages (singleton)
         ConfirmationService,    // confirm dialogs (singleton)

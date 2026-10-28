@@ -1,5 +1,7 @@
 services:
   angular-app:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build: .
     container_name: angular_shopping_app
     working_dir: /app

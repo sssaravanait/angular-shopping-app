@@ -105,7 +105,7 @@ export class CustomerForm implements OnInit {
         if (e['required']) return 'This field is required.';
         if (e['email']) return 'Enter a valid email address.';
         if (e['maxlength']) return `Maximum ${e['maxlength'].requiredLength} characters.`;
-        if (e['pattern']) return 'Enter 10 to 15 digits, optionally starting with +.';
+        if (e['pattern']) return 'Enter 10 to 15 digits.';
         if (e['futureDate']) return 'Date of birth cannot be in the future.';
         if (e['minAge']) return `Customer must be at least ${e['minAge'].requiredYears} years old.`;
         if (e['server']) return e['server'];
@@ -134,6 +134,8 @@ export class CustomerForm implements OnInit {
                         phone: customer.phone,
                         dob: parseIsoDate(customer.dob),
                     });
+
+                    console.log("Retrieved customer details", this.form.getRawValue());
                 },
                 error: (err: ApiError) => {
                     this.notifyService.error(err.message)

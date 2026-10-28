@@ -21,7 +21,7 @@ export class CustomerService {
     }
 
     getById(id: number): Observable<Customer> {
-        return this.http.get<Customer>(`${this.baseUrl}/${id}`);
+        return this.http.get<Customer>(`${this.baseUrl}${id}/`);
     }
 
     create(payload: CustomerPayload): Observable<Customer> {
@@ -29,10 +29,10 @@ export class CustomerService {
     }
 
     update(id: number, payload: CustomerPayload): Observable<Customer> {
-        return this.http.put<Customer>(`${this.baseUrl}/${id}`, payload);
+        return this.http.put<Customer>(`${this.baseUrl}${id}/`, payload);
     }
 
     delete(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${id}`);
+        return this.http.delete<void>(`${this.baseUrl}${id}/`);
     }
 }
