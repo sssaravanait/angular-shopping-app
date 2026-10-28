@@ -1,17 +1,21 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment'
+import { httpErrorInterceptor } from './core/http/http-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(), 
-        provideHttpClient(),
-        provideRouter(routes),
+        provideHttpClient(withInterceptors([httpErrorInterceptor])),
+        provideRouter(routes, withComponentInputBinding()),
+        MessageService,     // toast messages (singleton)
+        ConfirmationService,    // confirm dialogs (singleton)
         providePrimeNG({
             license: environment.primeUiLicense,
             theme: {

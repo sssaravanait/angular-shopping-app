@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { Pencil } from '@primeicons/angular/pencil';
@@ -8,24 +9,7 @@ import { Trash } from '@primeicons/angular/trash';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { environment } from '../../../environments/environment';
 
-interface Customer {
-    readonly id: number;
-    readonly first_name: string;
-    readonly last_name: string;
-    readonly email: string;
-    readonly phone: string;
-    readonly dob: string;
-    readonly created_at: string;
-    readonly updated_at: string;
-}
-
-interface CustomerPage {
-    readonly page: number;
-    readonly per_page: number;
-    readonly total_pages: number;
-    readonly total_items: number;
-    readonly data: Customer[];
-}
+import { Customer, CustomerPage } from './models/customer.model';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +20,7 @@ interface CustomerPage {
 })
 export class CustomerComponent implements OnInit {
     private readonly http = inject(HttpClient);
+    private readonly router = inject(Router);
 
     protected readonly customers = signal<Customer[]>([]);
     protected readonly totalRecords = signal(0);
@@ -71,6 +56,14 @@ export class CustomerComponent implements OnInit {
 
     protected reload(): void {
         this.loadCustomers();
+    }
+
+    protected createCustomer(): void {
+        this.router.navigate(['/customers/create']);
+    }
+
+    protected editCustomer(id: number): void {
+        this.router.navigate(['/customers', id, 'edit']);
     }
 
     private loadCustomers(): void {

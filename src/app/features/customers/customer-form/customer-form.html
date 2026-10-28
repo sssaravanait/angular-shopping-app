@@ -1,0 +1,99 @@
+<section class="p-6">
+    <header class="mb-6">
+        <h2 class="text-2xl font-semibold text-slate-800">{{ title() }}</h2>
+    </header>
+
+    <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        @if (isLoading()) {
+        <!-- Skeleton placeholder while the customer is being fetched -->
+        <div class="grid animate-pulse grid-cols-1 gap-5 md:grid-cols-2" aria-busy="true" aria-label="Loading customer">
+            @for (item of [1, 2, 3, 4, 5]; track item) {
+            <div class="space-y-2">
+                <div class="h-4 w-1/3 rounded bg-slate-200"></div>
+                <div class="h-10 w-full rounded bg-slate-200"></div>
+            </div>
+            }
+        </div>
+        } @else {
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <div class="grid grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-2">
+
+                <!-- First name -->
+                <div class="flex flex-col">
+                    <label for="first_name" class="mb-1.5 text-sm font-medium text-slate-700">
+                        First name <span class="text-red-600">*</span>
+                    </label>
+                    <input pInputText id="first_name" formControlName="first_name" class="w-full" placeholder="Enter first name"
+                        autocomplete="given-name" [class.p-invalid]="isInvalid('first_name')"
+                        [attr.aria-invalid]="isInvalid('first_name')" aria-describedby="first_name-error" />
+                    @if (errorFor('first_name'); as msg) {
+                    <small id="first_name-error" class="mt-1.5 text-sm text-red-600">{{ msg }}</small>
+                    }
+                </div>
+
+                <!-- Last name -->
+                <div class="flex flex-col">
+                    <label for="last_name" class="mb-1.5 text-sm font-medium text-slate-700">
+                        Last name <span class="text-red-600">*</span>
+                    </label>
+                    <input pInputText id="last_name" formControlName="last_name" class="w-full" placeholder="Enter last name"
+                        autocomplete="family-name" [class.p-invalid]="isInvalid('last_name')"
+                        [attr.aria-invalid]="isInvalid('last_name')" aria-describedby="last_name-error" />
+                    @if (errorFor('last_name'); as msg) {
+                    <small id="last_name-error" class="mt-1.5 text-sm text-red-600">{{ msg }}</small>
+                    }
+                </div>
+
+                <!-- Email -->
+                <div class="flex flex-col">
+                    <label for="email" class="mb-1.5 text-sm font-medium text-slate-700">
+                        Email <span class="text-red-600">*</span>
+                    </label>
+                    <input pInputText id="email" type="email" formControlName="email" class="w-full" placeholder="Enter email"
+                        autocomplete="email" [class.p-invalid]="isInvalid('email')"
+                        [attr.aria-invalid]="isInvalid('email')" aria-describedby="email-error" />
+                    @if (errorFor('email'); as msg) {
+                    <small id="email-error" class="mt-1.5 text-sm text-red-600">{{ msg }}</small>
+                    }
+                </div>
+
+                <!-- Phone -->
+                <div class="flex flex-col">
+                    <label for="phone" class="mb-1.5 text-sm font-medium text-slate-700">
+                        Phone <span class="text-red-600">*</span>
+                    </label>
+                    <input pInputText id="phone" formControlName="phone" class="w-full" autocomplete="tel"
+                        placeholder="Enter phone number" [class.p-invalid]="isInvalid('phone')"
+                        [attr.aria-invalid]="isInvalid('phone')" aria-describedby="phone-error" />
+                    @if (errorFor('phone'); as msg) {
+                    <small id="phone-error" class="mt-1.5 text-sm text-red-600">{{ msg }}</small>
+                    }
+                </div>
+
+                <!-- Date of birth (spans full width on desktop for visual balance) -->
+                <div class="flex flex-col md:col-span-2 md:max-w-sm">
+                    <label for="dob" class="mb-1.5 text-sm font-medium text-slate-700">
+                        Date of birth <span class="text-red-600">*</span>
+                    </label>
+                    <p-datepicker inputId="dob" formControlName="dob" class="w-full" inputStyleClass="w-full"
+                        dateFormat="yy-mm-dd" placeholder="yyyy-mm-dd" [maxDate]="today" [showIcon]="true"
+                        [showClear]="true" appendTo="body" [invalid]="isInvalid('dob')"
+                        [attr.aria-invalid]="isInvalid('dob')" aria-describedby="dob-error" />
+                    @if (errorFor('dob'); as msg) {
+                    <small id="dob-error" class="mt-1.5 text-sm text-red-600">{{ msg }}</small>
+                    }
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <footer class="mt-8 flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-end">
+                <button pButton severity="danger" outlined raised type="button" class="w-full sm:w-auto"
+                    routerLink="/customers">Cancel</button>
+                <button pButton severity="primary" outlined raised type="submit" class="w-full sm:w-auto" [disabled]="isSubmitting()">
+                    {{ isEditMode() ? 'Update' : 'Create' }}
+                </button>
+            </footer>
+        </form>
+        }
+    </div>
+</section>

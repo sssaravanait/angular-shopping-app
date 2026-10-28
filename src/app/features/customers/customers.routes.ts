@@ -5,12 +5,17 @@ import { CustomerComponent } from './customers';
 export const CUSTOMERS_ROUTES: Routes = [
     {
         path: '',
+        title: 'Customers',
         component: CustomerComponent,
-        data: { title: 'Customers' },
     },
     {
         path: 'create',
-        component: FeaturePlaceholderComponent,
-        data: { title: 'Create Customer' },
+        title: 'Create customer',
+        loadComponent: () => import("./customer-form/customer-form").then(m => m.CustomerForm),
     },
+    {
+        path: ':id/edit',
+        title: 'Edit customer',
+        loadComponent: () => import("./customer-form/customer-form").then(m => m.CustomerForm),
+    }
 ];
