@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, computed, inject, signal, Component, DestroyRef, input, OnInit } from "@angular/core";
-import { ReactiveFormsModule, Validators, NonNullableFormBuilder, MaxLengthValidator } from "@angular/forms";
+import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from "@angular/forms";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from "@angular/router";
-import { finalize, Observable, takeUntil } from "rxjs";
+import { finalize } from "rxjs";
 
-import { Button, ButtonModule } from "primeng/button";
+import { ButtonModule } from "primeng/button";
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { ApiError } from "../../../core/models/api-error.model";
-import { toApiError } from "../../../core/http/http-error.interceptor";
 import { NotificationService } from "../../../core/services/notification.service";
-import { Customer, CustomerPage, CustomerPayload } from "../models/customer.model";
+import { CustomerPayload } from "../models/customer.model";
 import { CustomerService } from "../services/customer.service";
 import { minAgeValidator, notBlankValidator, notInFutureValidator, phoneValidator } from "../utils/customer.validator";
 import { toIsoDate, parseIsoDate } from "../../../core/utils/date.utils";
@@ -134,8 +133,6 @@ export class CustomerForm implements OnInit {
                         phone: customer.phone,
                         dob: parseIsoDate(customer.dob),
                     });
-
-                    console.log("Retrieved customer details", this.form.getRawValue());
                 },
                 error: (err: ApiError) => {
                     this.notifyService.error(err.message)

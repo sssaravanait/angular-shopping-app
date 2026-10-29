@@ -8,8 +8,9 @@ import { Pencil } from '@primeicons/angular/pencil';
 import { Trash } from '@primeicons/angular/trash';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 
+import { ApiError } from '../../core/models/api-error.model';
 import { Customer } from './models/customer.model';
-import { ApiError, CustomerService } from './services/customer.service';
+import { CustomerService } from './services/customer.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
