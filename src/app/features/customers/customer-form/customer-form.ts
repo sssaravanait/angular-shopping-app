@@ -155,16 +155,16 @@ export class CustomerForm implements OnInit {
 
     /**
    * Maps server errors to the right fields.
-   * 422 with fieldErrors -> show under each field.
+   * 4xx with fieldErrors -> show under each field (e.g. unique email).
    * Other 4xx -> toast. 5xx and network -> already toasted by the interceptor.
    */
     private handleSaveError(err: ApiError): void {
-        if (err.status === 422 && err.fieldErrors) {
+        if (err.fieldErrors) {
             for (const [field, message] of Object.entries(err.fieldErrors)) {
                 const control = this.form.get(field);
                 if (control) {
                     // Adds a "server" error. Angular re-runs validators on the next
-                    // change, which clears it automatically.
+                    // value change, which clears it automatically (input or reset).
                     control.setErrors({ ...control.errors, server: message });
                     control.markAsTouched();
                 }
