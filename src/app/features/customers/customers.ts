@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { Pencil } from '@primeicons/angular/pencil';
 import { Trash } from '@primeicons/angular/trash';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
-import { environment } from '../../../environments/environment';
 
-import { Customer, CustomerPage } from './models/customer.model';
+import { Customer } from './models/customer.model';
+import { ApiError, CustomerService } from './services/customer.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,8 +19,9 @@ import { Customer, CustomerPage } from './models/customer.model';
     styleUrl: './customers.css',
 })
 export class CustomerComponent implements OnInit {
-    private readonly http = inject(HttpClient);
     private readonly router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly customerService = inject(CustomerService);
 
     protected readonly customers = signal<Customer[]>([]);
     protected readonly totalRecords = signal(0);
@@ -66,28 +67,50 @@ export class CustomerComponent implements OnInit {
         this.router.navigate(['/customers', id, 'edit']);
     }
 
-    private loadCustomers(): void {
-        let params = new HttpParams()
-            .set('page', String(Math.floor(this.first() / this.pageSize()) + 1))
-            .set('per_page', String(this.pageSize()));
-
-        if (this.sortField() && this.sortOrder()) {
-            params = params
-                .set('sort_field', this.sortField()!)
-                .set('sort_order', this.sortOrder()!);
-        }
+    protected deleteCustomer(id: number): void {
 
         this.loading.set(true);
         this.error.set(null);
 
-        this.http.get<CustomerPage>(`${environment.apiUrl}/customers/`, { params })
-        .pipe(finalize(() => this.loading.set(false)))
-        .subscribe({
-            next: (response) => {
-                this.customers.set(response.data);
-                this.totalRecords.set(response.total_items);
-            },
-            error: () => this.error.set('Unable to load customers. Please try again.'),
-        });
+        this.customerService.delete(id)
+            .pipe(
+                finalize(() => this.loading.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: (response) => {
+                    // If this was the last row on a page after the first, go back one page
+                    if (this.customers().length === 1 && this.first() > 0) {
+                        this.first.update(f => Math.max(0, f - this.pageSize()));
+                    }
+
+                    this.loadCustomers();
+                },
+                error: (err: ApiError) => this.error.set(err.message),
+            });
+    }
+
+    private loadCustomers(): void {
+
+        this.loading.set(true);
+        this.error.set(null);
+
+        this.customerService.list({
+            page: Number(Math.floor(this.first() / this.pageSize()) + 1), 
+            perPage: Number(this.pageSize()), 
+            sortField: this.sortField(), 
+            sortOrder: this.sortOrder()
+        })
+            .pipe(
+                finalize(() => this.loading.set(false)),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe({
+                next: (response) => {
+                    this.customers.set(response.data);
+                    this.totalRecords.set(response.total_items);
+                },
+                error: (err: ApiError) => this.error.set(err.message),
+            });
     }
 }
