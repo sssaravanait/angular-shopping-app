@@ -8,19 +8,13 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-
-/** Prevents open redirects: only same-origin, non-login paths are allowed. */
-function safeReturnUrl(url: string | null): string {
-    const isSafe = !!url && url.startsWith('/') && !url.startsWith('//') && !url.startsWith('/login');
-    return isSafe ? url : '/dashboard';
-}
 
 @Component({
     imports: [InputTextModule, ButtonModule, ReactiveFormsModule],
@@ -32,10 +26,7 @@ function safeReturnUrl(url: string | null): string {
 export class Login {
     private readonly auth = inject(AuthService);
     private readonly router = inject(Router);
-    private readonly route = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
-
-    private readonly returnUrl = safeReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
 
     readonly loading = signal(false);
     readonly errorMessage = signal<string | null>(null);
@@ -68,7 +59,7 @@ export class Login {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
-                next: () => void this.router.navigateByUrl(this.returnUrl),
+                next: () => void this.router.navigateByUrl('/dashboard'),
                 error: (err: HttpErrorResponse) => this.errorMessage.set(this.toErrorMessage(err)),
             });
     }
