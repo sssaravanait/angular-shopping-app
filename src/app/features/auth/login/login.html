@@ -1,0 +1,48 @@
+<!-- features/auth/login/login.component.html -->
+<section class="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+    <div class="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
+        <div class="text-center">
+            <h1 class="text-2xl font-semibold text-gray-900">Sign in</h1>
+            <p class="mt-1 text-sm text-gray-500">Access the admin panel</p>
+        </div>
+
+        @if (errorMessage(); as message) {
+            <div role="alert" class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {{ message }}
+            </div>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 space-y-5" novalidate>
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input pInputText id="username" type="text" formControlName="username" autocomplete="username"
+                    class="w-full mt-2" [class.p-invalid]="isInvalid('username')"
+                    [attr.aria-invalid]="isInvalid('username')" aria-describedby="username-error" />
+                @if (isInvalid('username')) {
+                    <p class="mt-1 text-xs text-red-600">Username is required.</p>
+                }
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input pInputText id="password" type="password" formControlName="password" autocomplete="current-password"
+                    class="w-full mt-2" [class.p-invalid]="isInvalid('password')"
+                    [attr.aria-invalid]="isInvalid('password')" aria-describedby="password-error" />
+                @if (isInvalid('password')) {
+                    <p class="mt-1 text-xs text-red-600">Password is required.</p>
+                }
+            </div>
+
+            <div class="justify-center items-center">
+                <button pButton [disabled]="loading()" severity="primary" raised>
+                    @if (loading()) {
+                        <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                        Signing in…
+                    } @else {
+                        Sign in
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</section>

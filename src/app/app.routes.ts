@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './core/layout/admin-layout.component';
+import { Login } from './features/auth/login/login';
 
 export const routes: Routes = [
 	{
@@ -29,5 +30,10 @@ export const routes: Routes = [
 			},
 		],
 	},
-	{ path: '**', redirectTo: 'dashboard' },
+    {
+        path: 'login',
+        component: Login,
+        pathMatch: 'full',
+    },
+	{ path: '**', redirectTo: 'login' },
 ];
