@@ -47,12 +47,12 @@ export class CustomerComponent implements OnInit {
         this.loadCustomers();
     }
 
-    protected onSortChange(event: TableLazyLoadEvent): void {
-        const field = typeof event.sortField === 'string' ? event.sortField : undefined;
+    protected onSortChange(event: { field?: string; order: number }): void {
+        const field = typeof event.field === 'string' ? event.field : undefined;
 
         this.first.set(0);
         this.sortField.set(field);
-        this.sortOrder.set(field && event.sortOrder ? (event.sortOrder === 1 ? 'asc' : 'desc') : undefined);
+        this.sortOrder.set(field && event.order ? (event.order === 1 ? 'asc' : 'desc') : undefined);
         this.loadCustomers();
     }
 
