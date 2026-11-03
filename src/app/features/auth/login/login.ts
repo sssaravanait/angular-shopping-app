@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
+import { ADMIN_DASHBOARD_URL } from '../../../core/routes/admin-routes';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -59,7 +60,7 @@ export class Login {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe({
-                next: () => void this.router.navigateByUrl('/dashboard'),
+                next: () => void this.router.navigateByUrl(ADMIN_DASHBOARD_URL),
                 error: (err: HttpErrorResponse) => this.errorMessage.set(this.toErrorMessage(err)),
             });
     }

@@ -12,7 +12,14 @@ describe('SidebarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SidebarComponent],
-      providers: [provideRouter([{ path: 'customers', component: CustomersRouteComponent }])],
+      providers: [
+        provideRouter([
+          {
+            path: 'admin',
+            children: [{ path: 'customers', component: CustomersRouteComponent }],
+          },
+        ]),
+      ],
     }).compileComponents();
   });
 
@@ -32,10 +39,10 @@ describe('SidebarComponent', () => {
       'Orders',
     ]);
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
-      '/dashboard',
-      '/customers',
-      '/products',
-      '/orders',
+      '/admin/dashboard',
+      '/admin/customers',
+      '/admin/products',
+      '/admin/orders',
     ]);
   });
 
@@ -44,12 +51,12 @@ describe('SidebarComponent', () => {
     fixture.detectChanges();
 
     const customersLink = fixture.nativeElement.querySelector(
-      'a[href="/customers"]',
+      'a[href="/admin/customers"]',
     ) as HTMLAnchorElement;
     customersLink.click();
     await fixture.whenStable();
 
-    expect(TestBed.inject(Router).url).toBe('/customers');
+    expect(TestBed.inject(Router).url).toBe('/admin/customers');
   });
 
   it('should not disable pointer events when the desktop sidebar is closed', () => {

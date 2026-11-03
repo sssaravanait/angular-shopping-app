@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { ADMIN_LOGIN_URL } from '../routes/admin-routes';
 
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
@@ -34,6 +35,6 @@ export class HeaderComponent implements OnInit {
     }
 
     protected logout(): void {
-        this.auth.logout().subscribe(() => void this.router.navigateByUrl('/login'));
+        this.auth.logout().subscribe(() => void this.router.navigateByUrl(ADMIN_LOGIN_URL));
     }
 }

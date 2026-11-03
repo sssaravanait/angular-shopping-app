@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { Pencil } from '@primeicons/angular/pencil';
@@ -20,6 +20,7 @@ import { ProductService } from './services/product.service';
 })
 export class ProductsComponent implements OnInit {
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productService = inject(ProductService);
 
@@ -61,11 +62,11 @@ export class ProductsComponent implements OnInit {
     }
 
     protected createProduct(): void {
-        this.router.navigate(['/products/create']);
+        this.router.navigate(['create'], { relativeTo: this.route });
     }
 
     protected editProduct(id: number): void {
-        this.router.navigate(['/products', id, 'edit']);
+        this.router.navigate([id, 'edit'], { relativeTo: this.route });
     }
 
     protected deleteProduct(id: number): void {

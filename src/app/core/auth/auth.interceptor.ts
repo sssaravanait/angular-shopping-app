@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { API_BASE, AUTH_ENDPOINTS } from './auth.routes';
 import { AuthService } from './auth.service';
+import { ADMIN_LOGIN_URL } from '../routes/admin-routes';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 const AUTH_URLS = new Set<string>(Object.values(AUTH_ENDPOINTS));
@@ -39,7 +40,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             // /me (guard probe) and /login (bad credentials) do not redirect.
             if (err.status === 401 && !AUTH_URLS.has(req.url)) {
                 auth.clearSession();
-                router.navigate(['/login'], { queryParams: { returnUrl: router.url } });
+                router.navigate([ADMIN_LOGIN_URL], { queryParams: { returnUrl: router.url } });
             }
 
             return throwError(() => err);

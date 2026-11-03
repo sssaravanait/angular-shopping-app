@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,6 +25,7 @@ export class ProductForm implements OnInit {
     private readonly productService = inject(ProductService);
     private readonly notifyService = inject(NotificationService);
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
 
     readonly id = input<number | undefined, unknown>(undefined, {
@@ -77,7 +78,7 @@ export class ProductForm implements OnInit {
         ).subscribe({
             next: () => {
                 this.notifyService.success(this.isEditMode() ? 'Product updated successfully.' : 'Product created successfully.');
-                this.router.navigate(['/products']);
+                this.router.navigate(['..'], { relativeTo: this.route });
             },
             error: (err: ApiError) => this.handleSaveError(err),
         });
@@ -121,7 +122,7 @@ export class ProductForm implements OnInit {
                 }),
                 error: (err: ApiError) => {
                     this.notifyService.error(err.message);
-                    this.router.navigate(['/products']);
+                    this.router.navigate(['..'], { relativeTo: this.route });
                 },
             });
     }

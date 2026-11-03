@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, computed, inject, signal, Component, DestroyRef, input, OnInit } from "@angular/core";
 import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from "@angular/forms";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { finalize } from "rxjs";
 
 import { ButtonModule } from "primeng/button";
@@ -32,6 +32,7 @@ export class CustomerForm implements OnInit {
     private readonly customerService = inject(CustomerService);
     private readonly notifyService = inject(NotificationService);
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
 
     /**
@@ -88,7 +89,7 @@ export class CustomerForm implements OnInit {
         .subscribe({
             next: () => {
                 this.notifyService.success(this.isEditMode() ? 'Customer updated successfully.' : 'Customer created successfully.');
-                this.router.navigate(["/customers"]);
+                this.router.navigate(['..'], { relativeTo: this.route });
             },
             error: (err: ApiError) => this.handleSaveError(err),
         });
@@ -136,7 +137,7 @@ export class CustomerForm implements OnInit {
                 },
                 error: (err: ApiError) => {
                     this.notifyService.error(err.message)
-                    this.router.navigate(["/customers"]);
+                    this.router.navigate(['..'], { relativeTo: this.route });
                 }
             });
     }
