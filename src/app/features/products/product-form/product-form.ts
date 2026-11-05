@@ -247,7 +247,7 @@ export class ProductForm implements OnInit, OnDestroy {
                         is_active: product.is_active,
                         description: product.description ?? '',
                     });
-                    this.existingImages.set(product.product_images ?? []);
+                    this.existingImages.set(product.images ?? []);
                     this.form.controls.product_images.updateValueAndValidity();
                 },
                 error: (err: ApiError) => {

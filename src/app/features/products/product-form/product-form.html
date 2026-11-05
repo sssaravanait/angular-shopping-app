@@ -97,7 +97,7 @@
 
                     <div class="flex flex-col">
                         <label id="product-images-label" class="mb-1.5 text-sm font-medium text-slate-700">
-                            Product images <span class="text-red-600">*</span>
+                            Product Images <span class="text-red-600">*</span>
                         </label>
                         <p-fileupload name="product_images" [multiple]="true" [customUpload]="true"
                             [disabled]="remainingImageSlots() === 0"
@@ -136,7 +136,7 @@
 
                         @if (existingImages().length > 0) {
                             <div class="mt-4">
-                                <h3 class="mb-2 text-sm font-medium text-slate-700">Current images</h3>
+                                <h3 class="mb-2 text-sm font-medium text-slate-700">Current Images</h3>
                                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                                     @for (image of existingImages(); track image.id) {
                                         <figure class="overflow-hidden rounded-lg border border-slate-200">
