@@ -19,9 +19,16 @@ export interface Product {
     readonly price: string;
     readonly stock_quantity: number;
     readonly is_active: boolean;
+    readonly description?: string;
+    readonly product_images?: readonly ProductImage[];
     readonly created_at: string;
     readonly updated_at: string;
     readonly deleted_at: string | null;
+}
+
+export interface ProductImage {
+    readonly id: number;
+    readonly url: string;
 }
 
 export interface ProductPage {
@@ -40,4 +47,7 @@ export interface ProductPayload {
     price: string;
     stock_quantity: number;
     is_active: boolean;
+    description: string;
+    product_images: readonly File[];
+    deleted_product_image_ids: readonly number[];
 }

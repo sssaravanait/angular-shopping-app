@@ -34,11 +34,11 @@ export class ProductService {
     }
 
     create(payload: ProductPayload): Observable<Product> {
-        return this.http.post<Product>(this.baseUrl, payload);
+        return this.http.post<Product>(this.baseUrl, this.toFormData(payload));
     }
 
     update(id: number, payload: ProductPayload): Observable<Product> {
-        return this.http.put<Product>(this.itemUrl(id), payload);
+        return this.http.put<Product>(this.itemUrl(id), this.toFormData(payload));
     }
 
     delete(id: number): Observable<void> {
@@ -47,5 +47,23 @@ export class ProductService {
 
     private itemUrl(id: number): string {
         return `${this.baseUrl}${id}/`;
+    }
+
+    private toFormData(payload: ProductPayload): FormData {
+        const formData = new FormData();
+        formData.append('name', payload.name);
+        formData.append('category', payload.category);
+        formData.append('sku', payload.sku);
+        formData.append('price', payload.price);
+        formData.append('stock_quantity', String(payload.stock_quantity));
+        formData.append('is_active', String(payload.is_active));
+        formData.append('description', payload.description);
+
+        for (const image of payload.product_images) {
+            formData.append('product_images', image, image.name);
+        }
+
+        formData.append('deleted_product_image_ids', JSON.stringify(payload.deleted_product_image_ids));
+        return formData;
     }
 }

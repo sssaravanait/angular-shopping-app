@@ -30,7 +30,8 @@
                         <label for="category" class="mb-1.5 text-sm font-medium text-slate-700">Category <span class="text-red-600">*</span></label>
                         <select id="category" formControlName="category"
                             class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
-                            [class.border-red-600]="isInvalid('category')" [attr.aria-invalid]="isInvalid('category')">
+                            [class.border-red-600]="isInvalid('category')" [attr.aria-invalid]="isInvalid('category')"
+                        >
                             @for (category of categories; track category.value) {
                                 <option [value]="category.value">{{ category.label }}</option>
                             }
@@ -74,6 +75,83 @@
                         <input id="is_active" type="checkbox" formControlName="is_active"
                             class="h-4 w-4 rounded border-slate-300 text-emerald-600" />
                         <label for="is_active" class="text-sm font-medium text-slate-700">Active</label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-x-5 gap-y-5 mt-4">
+                    <div class="flex flex-col">
+                        <label for="description" class="mb-1.5 text-sm font-medium text-slate-700">Description</label>
+                        <textarea pInputTextarea id="description" formControlName="description" class="w-full"
+                            rows="4" maxlength="1000" placeholder="Enter product description"
+                            [class.p-invalid]="isInvalid('description')" [attr.aria-invalid]="isInvalid('description')"
+                            aria-describedby="description-count description-error"></textarea>
+                        <div class="mt-1 flex justify-between text-sm text-slate-500">
+                            @if (errorFor('description'); as message) {
+                                <small id="description-error" class="text-red-600">{{ message }}</small>
+                            } @else {
+                                <span></span>
+                            }
+                            <small id="description-count">{{ form.controls.description.value.length }}/1000</small>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label id="product-images-label" class="mb-1.5 text-sm font-medium text-slate-700">
+                            Product images <span class="text-red-600">*</span>
+                        </label>
+                        <p-fileupload name="product_images" [multiple]="true" [customUpload]="true"
+                            [disabled]="remainingImageSlots() === 0"
+                            [showUploadButton]="false" [showCancelButton]="false"
+                            [fileLimit]="remainingImageSlots()" [maxFileSize]="maxImageSizeBytes"
+                            [accept]="imageAccept" chooseLabel="Choose images" uploadLabel="Upload"
+                            (onSelect)="onImagesSelected($event)" (onRemove)="removeSelectedImage($event.file)">
+                            <ng-template #content let-files let-removeFileCallback="removeFileCallback">
+                                <div class="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3 md:grid-cols-5">
+                                    @for (file of files; track $index; let index = $index) {
+                                        <figure class="overflow-hidden rounded-lg border border-slate-200">
+                                            @if (previewFor(file); as preview) {
+                                                <img [src]="preview.url" [alt]="file.name"
+                                                    class="h-28 w-full object-cover" />
+                                            }
+                                            <figcaption class="flex items-center justify-between gap-2 p-2">
+                                                <span class="truncate text-xs text-slate-600">{{ file.name }}</span>
+                                                <button type="button" class="text-xs font-medium text-red-600"
+                                                    [attr.aria-label]="'Remove ' + file.name"
+                                                    (click)="removeFileCallback($event, index)">Remove</button>
+                                            </figcaption>
+                                        </figure>
+                                    }
+                                </div>
+                            </ng-template>
+                            <ng-template #empty>
+                                <p class="m-0 p-3 text-sm text-slate-500">Choose or drag up to 5 JPG, PNG, or GIF images. Maximum 2 MB per image.</p>
+                            </ng-template>
+                        </p-fileupload>
+                        @if (uploadError(); as message) {
+                            <small class="mt-1.5 text-sm text-red-600">{{ message }}</small>
+                        }
+                        @if (imageError(); as message) {
+                            <small class="mt-1.5 text-sm text-red-600">{{ message }}</small>
+                        }
+
+                        @if (existingImages().length > 0) {
+                            <div class="mt-4">
+                                <h3 class="mb-2 text-sm font-medium text-slate-700">Current images</h3>
+                                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                                    @for (image of existingImages(); track image.id) {
+                                        <figure class="overflow-hidden rounded-lg border border-slate-200">
+                                            <img [src]="image.url" alt="Product image"
+                                                class="h-28 w-full object-cover" />
+                                            <figcaption class="p-2">
+                                                <button type="button" class="text-xs font-medium text-red-600"
+                                                    [attr.aria-label]="'Remove current image ' + image.id"
+                                                    (click)="removeExistingImage(image)">Remove image</button>
+                                            </figcaption>
+                                        </figure>
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
 
